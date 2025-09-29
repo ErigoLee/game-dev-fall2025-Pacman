@@ -1,6 +1,6 @@
 # Assignment 1 - Unity Review: Pacman
 **Branch version:** `Version1`</br>
-This branch contains the Pacman project for **Assignment 1 (Unity Review)**. 
+This branch contains the Pacman project for **Assignment 1 (Unity Review)**. </br>
 https://github.com/ErigoLee/game-dev-fall2025-Pacman/tree/Version1</br>
 **Play the Game** </br>
 https://erigolee.github.io/game-dev-fall2025-Pacman/Pacman_Builds/
@@ -8,7 +8,7 @@ https://erigolee.github.io/game-dev-fall2025-Pacman/Pacman_Builds/
 # Assignment - 2 OOP Inventory
 **Branch version:** `Version2`</br>
 > Note: The current main branch is at version 2.
-This branch contains the Pacman project for **Assignment 2 OOP Inventory**. 
+This branch contains the Pacman project for **Assignment 2 OOP Inventory**. </br>
 **Play the Game**
 
 
