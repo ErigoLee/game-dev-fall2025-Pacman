@@ -15,7 +15,7 @@ This branch contains the Pacman project for **Assignment 2 OOP Inventory**. </br
 
 ## License 
 - All **source code** in this repository is licensed under the [MIT License](./LICENSE).
-- Some code and assets are adapted from **Game Development II course materials** (undergraduate coursework).
+- Some code and assets are adapted from **Game Development II course materials**.
   Details are listed below.
 - Third-party **assets** (models, textures, sounds, fonts, etc.) remain under their original licenses.
   They may **not be licensed for redistribution or in-game use** in this repository.  
