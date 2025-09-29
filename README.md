@@ -25,3 +25,7 @@ This branch contains the Pacman project for **Assignment 2 OOP Inventory**. </br
 > Note: Third-party assets remain under their original licenses.
 > They may **not be licensed for redistribution or in-game use** in this repository.  
 > Please review each source page for license terms before redistribution or in-game use.
+
+
+- **RGRPG Essentials Sound Effects - FREE!** </br>
+  Source: https://assetstore.unity.com/packages/audio/sound-fx/rpg-essentials-sound-effects-free-227708
