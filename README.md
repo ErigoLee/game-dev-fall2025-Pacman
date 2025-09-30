@@ -21,6 +21,11 @@ https://erigolee.github.io/game-dev-fall2025-Pacman/Pacman_Builds/
 This branch contains the Pacman project for **Assignment 2 OOP Inventory**. </br>
 **Play the Game**
 
+**Game Description**
+- Implemented an abstract Item class and created derived classes such as AppleItem and OrangeItem, which can be collected into the inventory.
+- Added an Observer pattern in GameManager so that when the player collects inventory items or frozen enemies, they are added to the inventory.
+- Integrated the Observer pattern in GameManager to update game UI and play sound effects when the player collects coins, obtains a big reward, or takes damage from enemies.
+- Designed enemy behavior patterns using the IEnemyState interface, creating multiple state classes such as WaitState and AttackState.
 
 ## License 
 - All **source code** in this repository is licensed under the [MIT License](./LICENSE).
