@@ -29,3 +29,9 @@ This branch contains the Pacman project for **Assignment 2 OOP Inventory**. </br
 
 - **RGRPG Essentials Sound Effects - FREE!** </br>
   Source: https://assetstore.unity.com/packages/audio/sound-fx/rpg-essentials-sound-effects-free-227708
+
+- **Match 3d Object Pack: Fruits & Vegetables** </br>
+  Source: https://assetstore.unity.com/packages/3d/props/food/match-3d-object-pack-fruits-vegetables-284706
+
+- **Reference code from “Unity INVENTORY: A Definitive Tutorial**
+  Source: https://www.youtube.com/watch?v=oJAE6CbsQQA&t=509s
