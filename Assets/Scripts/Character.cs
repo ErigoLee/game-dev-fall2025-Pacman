@@ -49,6 +49,41 @@ public class Character : MonoBehaviour
             gameManager.HandleBigReward();
             Destroy(other.gameObject);
         }
+
+        if (other.CompareTag("Apple"))
+        {
+            Debug.Log("collect Apple");
+            gameManager.HandleItemReward("apple");
+            Destroy(other.gameObject);
+        }
+
+        if (other.CompareTag("Banana"))
+        {
+            Debug.Log("collect Banana");
+            gameManager.HandleItemReward("banana");
+            Destroy(other.gameObject);
+        }
+
+        if (other.CompareTag("Orange"))
+        {
+            Debug.Log("collect Orange");
+            gameManager.HandleItemReward("orange");
+            Destroy(other.gameObject);
+        }
+
+        if (other.CompareTag("Strawberry"))
+        {
+            Debug.Log("collect Starwberry");
+            gameManager.HandleItemReward("strawberry");
+            Destroy(other.gameObject);
+        }
+
+        if (other.CompareTag("Watermelon"))
+        {
+            Debug.Log("collect Watermelon");
+            gameManager.HandleItemReward("watermelon");
+            Destroy(other.gameObject);
+        }
     }
 
 }

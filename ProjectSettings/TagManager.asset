@@ -9,6 +9,17 @@ TagManager:
   - Reward
   - BigReward
   - GM
+  - Apple
+  - Orange
+  - Banana
+  - Watermelon
+  - Strawberry
+  - Banana_Item
+  - Ghost_Item
+  - Watermelon_Item
+  - Strawberry_Item
+  - Apple_Item
+  - Orange_Item
   layers:
   - Default
   - TransparentFX

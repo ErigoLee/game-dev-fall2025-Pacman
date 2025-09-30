@@ -15,8 +15,8 @@ public class EnemyControl : MonoBehaviour
 
     private bool isFreezing; 
  
-    [SerializeField] private Material UnFrezMat;
-    [SerializeField] private Material FrezMat;
+    [SerializeField] public Material UnFrezMat;
+    [SerializeField] public Material FrezMat;
 
     [SerializeField] private GameManager gameManager;
     void Awake()

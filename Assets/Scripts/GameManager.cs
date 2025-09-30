@@ -1,139 +1,202 @@
 using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
+using System;
+
 public class GameManager : MonoBehaviour
 {
-
-    private int totalRewards;
-    private int score;
-    [SerializeField] private int lifeCount;
-    private bool endGame;
-    private bool missionFail;
-
-    //Enemy variables
-    private int enemyCount;
-    private List<EnemyControl> enemyList;
-    
-    private bool isHitStopActive;
-    private float hitStopDuration;
-    private float hitStopTimer;
-
-    //Freezing variables
-    private float freezeDuration; 
-    private float freezeTimer;
-    private bool isFreezingActive;
-
-    [SerializeField] private GameObject spawnPoint;
-    [SerializeField] private GameObject player;
+    [Header("Game Settings")]
+    [SerializeField] private int totalRewards = 206;
+    [SerializeField] private int initialLifeCount = 3;
+    [SerializeField] private int initialEnemyCount = 4;
+    [SerializeField] private float freezeDuration = 10f;
+    [SerializeField] private float hitStopDuration = 1f;
+    [SerializeField] private float attackDuration = 3.5f;
+    [SerializeField] private float damagedDuration = 3.5f;
     [SerializeField] private GameObject enemies;
     [SerializeField] private GameObject rewards;
     [SerializeField] private GameObject bigRewards;
-    //UI
-    [SerializeField] private GameUI gameUI;
 
+    //game state variables
+    private int score;
+    private int lifeCount;
+    private bool endGame;
+    private bool missionFail;
+
+    private bool attackPanel;
+    private bool damagedPanel;
+
+    //Enemy variables
+    private int enemyCount;
+    private List<EnemyAI> enemyList;
     
+
+    // Cached references for efficiency
+    [SerializeField] private GameObject spawnPoint;
+    [SerializeField] private GameObject player;
+    private CharacterController playerController;
+    [SerializeField] private GameUI gameUI;
+    
+    //Materials
+    [SerializeField] public Material UnFrezMat;
+    [SerializeField] public Material FrezMat;
+
+    // Timers & Active Variables
+    // HitTimer: starts when the player hits an enemy.
+    // FreezingTimer: starts when the enemy is frozen.
+    private bool isHitStopActive;
+    private float hitStopTimer;
+    private float freezeTimer;
+    private bool isFreezingActive;
+    private float attackTimer;
+    private float damagedTimer;
+    
+    //observable - event function
+    public static event Action<GameManager> GameEnd;
+    public static event Action<GameManager> GameOver;
+    public static event Action<GameManager> FreezingEventStart;
+    public static event Action<GameManager> FreezingEventEnd;
+    public static event Action<GameManager> AttackEventStart;
+    public static event Action<GameManager> AttackEventEnd;
+    public static event Action<GameManager, string> collectItems;
+    public static event Action<GameManager> DamageEventStart;
+    public static event Action<GameManager> DamageEventEnd;
+    public static event Action<GameManager, int> GetScoreEvent;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        totalRewards = 206;
         score = 0;
-        lifeCount = 3;
+        lifeCount = initialLifeCount;
         endGame = false;
-        enemyCount = 4;
         missionFail = false;
-        enemyList = new List<EnemyControl>();
-        GameObject [] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        attackPanel = false;
+        damagedPanel = false;
+        enemyCount = initialEnemyCount;
+        enemyList = new List<EnemyAI>();
 
-        foreach (GameObject enemy in enemies)
-        {
-            enemyList.Add(enemy.GetComponent<EnemyControl>());
+        // Cache player controller
+        if(player != null){
+            playerController = player.GetComponent<CharacterController>();
+        }
+        else{
+            player = GameObject.FindWithTag("Player");
+            if (player == null){
+                Debug.LogError("Player not found!");
+            }
+            playerController = player.GetComponent<CharacterController>();
         }
 
-        freezeDuration = 10f;
+        //Populate enemy List
+        GameObject [] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        foreach (GameObject enemy in enemies)
+        {
+            EnemyAI ai = enemy.GetComponent<EnemyAI>();
+            if(ai != null){
+                enemyList.Add(ai);
+            }
+            
+        }
+
+        // Initialize timers
         freezeTimer = 0f;
         isFreezingActive = false;
         isHitStopActive = false;
         hitStopDuration = 1f;
         hitStopTimer = 0f;
+        attackDuration = 3.5f;
+        attackTimer = 0f;
+        damagedDuration = 3.5f;
+        damagedTimer = 0f;
 
     }
-
+    
     // Update is called once per frame
     void Update()
     {
 
         if (!endGame){
-            if(totalRewards == 0 || lifeCount == 0)   
+            // check for game end
+            if(totalRewards <= 0 || lifeCount <= 0)   
             {
                 endGame = true;
-                CharacterController cc = player.GetComponent<CharacterController>();
-                cc.enabled = false;
+                if (playerController != null){
+                    playerController.enabled = false;
+                }
                 Debug.Log("Game End");
-                if(lifeCount == 0)
+                if(lifeCount <= 0)
                 {
-                    missionFail = true;
+                    missionFail = true; 
+                    GameOver?.Invoke(this); // Invoke event for fail
                     
                 }
-                foreach (EnemyControl enemy in enemyList)
-                {
-                    enemy.TemporyStopOn();
+                else{
+                    GameEnd?.Invoke(this); // Invoke event for win 
                 }
             }
 
+            // Handle hit Stop
             if(isFreezingActive)
             {
                 freezeTimer -= Time.deltaTime;
                 if(freezeTimer <= 0){
                     freezeTimer = 0f;
                     isFreezingActive = false;
-                    gameUI.HideFreezingMessage();
-                    foreach (EnemyControl enemy in enemyList)
-                    {
-                        enemy.UnFreeze();
-                    }
+                    //gameUI.HideFreezingMessage();
+                    FreezingEventEnd?.Invoke(this); // Invoke event for freezingEnd
                 }
                 
             }
 
+            // Handle hit stop 
             if(isHitStopActive)
             {
                 hitStopTimer -= Time.deltaTime;
                 if(hitStopTimer <=0){
                     hitStopTimer = 0f;
                     isHitStopActive = false;
-                    foreach(EnemyControl enemy in enemyList)
-                    {
-                        enemy.TemporyStopOff();
-                    }
                 }
+            }
+
+            if (attackPanel)
+            {
+                attackTimer -= Time.deltaTime;
+                if(attackTimer <= 0){
+                    attackTimer = 0f;
+                    AttackEventEnd?.Invoke(this);
+                    attackPanel = false;
+                }
+                
+            }
+
+            if (damagedPanel)
+            {
+                damagedTimer -= Time.deltaTime;
+                if(damagedTimer <= 0){
+                    damagedTimer = 0f;
+                    DamageEventEnd?.Invoke(this);
+                    damagedPanel = false;
+                }
+                
             }
         }
         
     }
-    public int GettingScore()
-    {
-        return score;
-    }
 
-    public bool GettingGameEnd()
-    {
-        return endGame;
-    }
+    // public getters
+    public bool IsHitStopActive() => isHitStopActive;
+    public bool IsGameEnd() => endGame;
+    public bool IsFreezingActive () => isFreezingActive;
+    public int GetSore() => score;
+    public bool IsMissionFail() => missionFail;
+    public int GetLifeCount() => lifeCount;
 
-    public bool GettingMissionFail()
-    {
-        return missionFail;
-    }
-
-    public int GettingLifeCount()
-    {
-        return lifeCount;
-    }
 
     public void HandleReward()
     {
         totalRewards--;
         score += 10;
+        GetScoreEvent?.Invoke(this, score); // Invoke event for getting score
         Debug.Log("score: "+score);
     }
 
@@ -143,40 +206,49 @@ public class GameManager : MonoBehaviour
         score += 100;
         isFreezingActive = true;
         freezeTimer = freezeDuration;
-        gameUI.ShowFreezingMessage();
-        foreach (EnemyControl enemy in enemyList)
-        {
-            enemy.Freeze();
-        }
+        //gameUI.ShowFreezingMessage();
+        FreezingEventStart?.Invoke(this); // Invoke event for getting score
+        GetScoreEvent?.Invoke(this, score);
+        Debug.Log("score: "+score);
+    }
+
+    public void HandleItemReward(string item_name)
+    {
+        totalRewards--;
+        score += 150;
+        GetScoreEvent?.Invoke(this, score);
+        collectItems?.Invoke(this,item_name);
         Debug.Log("score: "+score);
     }
 
     public void OnPlayerDamaged()
     {
         lifeCount--;
-        CharacterController cc = player.GetComponent<CharacterController>();
-        cc.enabled = false;
-        cc.transform.position = spawnPoint.transform.position;
-        cc.enabled = true;
+        if (playerController != null && spawnPoint != null) {
+            playerController.enabled = false;
+            playerController.transform.position = spawnPoint.transform.position;
+            playerController.enabled = true;
+        }
         isHitStopActive = true;
         hitStopTimer = hitStopDuration;
-        foreach(EnemyControl enemy in enemyList)
-        {
-            enemy.TemporyStopOn();
-        }
-        gameUI.PopupCombatMessage(true);
-        gameUI.LoseLife();
+        damagedTimer = damagedDuration;
+        damagedPanel = true;
+        damagedTimer = damagedDuration;
+        DamageEventStart?.Invoke(this);
         Debug.Log("Enemies attack player, LifeTotal:"+lifeCount);
     }
 
     public void KillEnemy(GameObject enemy)
     {
-        EnemyControl deleteEnemy = enemy.GetComponent<EnemyControl>();
+        EnemyAI deleteEnemy = enemy.GetComponent<EnemyAI>();
         enemyList.Remove(deleteEnemy);
-        Destroy(enemy);
         score += 200;
         enemyCount --;
-        gameUI.PopupCombatMessage(false);
+        attackTimer = attackDuration;
+        attackPanel = true;
+        attackTimer = attackDuration;
+        GetScoreEvent?.Invoke(this, score);
+        AttackEventStart?.Invoke(this);
         Debug.Log("Player attack Enemy, score:"+score);
     }
 }
