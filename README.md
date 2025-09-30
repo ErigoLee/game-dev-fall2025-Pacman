@@ -33,5 +33,5 @@ This branch contains the Pacman project for **Assignment 2 OOP Inventory**. </br
 - **Match 3d Object Pack: Fruits & Vegetables** </br>
   Source: https://assetstore.unity.com/packages/3d/props/food/match-3d-object-pack-fruits-vegetables-284706
 
-- **Reference code from “Unity INVENTORY: A Definitive Tutorial**
+- **Reference code from “Unity INVENTORY: A Definitive Tutorial** </br>
   Source: https://www.youtube.com/watch?v=oJAE6CbsQQA&t=509s
