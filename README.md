@@ -16,7 +16,8 @@ https://erigolee.github.io/game-dev-fall2025-Pacman/Pacman_Builds/
 
 # Assignment - 2 OOP Inventory
 **Branch version:** `Version2`</br>
-> Note: The current main branch is at version 2.</br>
+> Note: The current main branch is at version 2.
+
 https://github.com/ErigoLee/game-dev-fall2025-Pacman/tree/Version2?tab=readme-ov-file
 
 This branch contains the Pacman project for **Assignment 2 OOP Inventory**. </br>
