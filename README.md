@@ -18,8 +18,11 @@ https://erigolee.github.io/game-dev-fall2025-Pacman/Pacman_Builds/
 **Branch version:** `Version2`</br>
 > Note: The current main branch is at version 2.
 
+https://github.com/ErigoLee/game-dev-fall2025-Pacman/tree/Version2?tab=readme-ov-file
+
 This branch contains the Pacman project for **Assignment 2 OOP Inventory**. </br>
-**Play the Game**
+**Play the Game** </br>
+https://erigolee.github.io/game-dev-fall2025-Pacman/Pacman_version2_Builds/
 
 **Game Description**
 - Implemented an abstract Item class and created derived classes such as AppleItem and OrangeItem, which can be collected into the inventory.
